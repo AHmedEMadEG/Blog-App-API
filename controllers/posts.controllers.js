@@ -64,7 +64,7 @@ exports.updatePost = async (req, res, next) => {
       { new: true }
     );
     if (!post) return res.status(404).send({ error: "Post not found" });
-    res.status(200).json(post);
+    res.status(200).json({post});
   } catch (error) {
     next(error);
   }
