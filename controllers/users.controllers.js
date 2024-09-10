@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 const jwtSign = util.promisify(jwt.sign);
 const { createUserSchema } = require("../utils/validations/users.validation");
 const CustomError = require("../utils/errors/CustomError");
+const uploadToImageKit = require("../utils/imageKitConfig");
+
 
 exports.signup = async (req, res, next) => {
   try {
@@ -12,11 +14,23 @@ exports.signup = async (req, res, next) => {
 
     const { name, email, password } = req.body;
 
+    let profilePictureUrl;
+    if (req.file) {
+      const profilePic = req.file;
+      const imageKitResponse = await uploadToImageKit(
+        profilePic,
+        profilePic.originalname,
+        "product_thumbnails"
+      );
+      profilePictureUrl = imageKitResponse.url;
+    }
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(409).send({ error: "Email is already in use" });
     }
-    const user = new User({ name, email, password });
+    
+    const user = new User({ name, email, password, profilePictureUrl });
     await user.save();
     res.send({ success: "User created", user });
   } catch (error) {

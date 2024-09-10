@@ -18,6 +18,8 @@ const userSchema = Schema(
       required: [true, "Password is required"],
       minlength: 8,
     },
+    profilePictureUrl: String
+    ,
     posts: [
       {
         type: Schema.Types.ObjectId,

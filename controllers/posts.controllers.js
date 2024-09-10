@@ -17,7 +17,7 @@ exports.createPost = async (req, res, next) => {
 exports.getPosts = async (req, res, next) => {
   try {
     const posts = await Post.find()
-      .populate("user", "name")
+      .populate("user")
       .populate({
         path: "comments",
         populate: [
